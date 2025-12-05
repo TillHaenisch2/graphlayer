@@ -453,7 +453,15 @@ class GraphAPI:
             direction = request.args.get("direction", "both")
             relationship_type = request.args.get("relationship_type")
             
-            related = self.query.find_related_nodes(node_id, relationship_type, direction)
+            # Map API direction names to GraphQuery direction names
+            direction_mapping = {
+                "outgoing": "out",
+                "incoming": "in",
+                "both": "both"
+            }
+            graph_direction = direction_mapping.get(direction, "both")
+            
+            related = self.query.find_related_nodes(node_id, relationship_type, graph_direction)
             return jsonify({
                 "node_id": node_id,
                 "direction": direction,
